@@ -9,7 +9,7 @@ const { create,
 // route.route('/create').get(create)
 route.route('/').get(getAll)
 route.route('/create').post(create)
-route.route('/create/:id').patch(updateById).delete(remove).get(get)
+route.route('/:jobId').patch(updateById).delete(remove).get(get)
 //route.route('/create/:id').delete(remove)
 
 module.exports = route

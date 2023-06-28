@@ -33,7 +33,8 @@ userSchema.pre('save',async function(next){
 })
 
 userSchema.methods.createToken = function(){
-    return jwt.sign({name:this.name},process.env.JWT_SECRET,{expiresIn:'1d'})
+    console.log("================",this._id)
+    return jwt.sign({id:this._id},process.env.JWT_SECRET,{expiresIn:'1d'})
 }
 
 userSchema.methods.comparePassword = async function(password){
