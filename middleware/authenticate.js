@@ -11,7 +11,6 @@ const auth = (req,res,next)=>{
 // try catch bcoz may be after bearer they wont be any space
     try{
        const payload = jwt.verify(token,process.env.JWT_SECRET)
-       console.log(payload.id)
        req.user = {id:payload.id}
        next()
     }catch(e){

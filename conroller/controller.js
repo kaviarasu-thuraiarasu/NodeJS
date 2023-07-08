@@ -4,7 +4,7 @@ const asyncWrapper  = require('../utils/asyncWrapper')
 
 
 const create = asyncWrapper(async (req,res)=>{
-    console.log(req.user.id)
+      
        req.body.createdBy   = req.user.id;
        const job            = await jobSchema.create(req.body)
        res.status(StatusCodes.CREATED).json({job})
@@ -12,7 +12,12 @@ const create = asyncWrapper(async (req,res)=>{
 
 const update = ()=>{}
 const remove = async (req,res)=>{
-    await jobSchema.deleteOne({_id: req.params.id})
+    
+    const {user:{id},params:{jobId:jid}} = req // Nested Destructuring
+    const job = await jobSchema.findOneAndRemove({ _id:jid,createdBy:id})
+    if(!job){
+        throw new Error("Job ID Not matching")
+    }
     res.send("Deleted Successfully")
 }
 const getAll = async (req,res)=>{
@@ -21,16 +26,33 @@ const getAll = async (req,res)=>{
 }
 
 const get = async (req,res)=>{
+    console.log(req.user,"*******",req.params)
     const {user:{id},params:{jobId:jid}} = req // Nested Destructuring
-    console.log(user, params.jid)
-    res.send("Get values by ID")
+    console.log(id,"====", jid)
+
+    const job = await jobSchema.findOne({
+        _id:jid,createdBy:id
+    })
+    if(!job){
+        throw new Error("Job ID Not matching")
+    }
+    res.send(job)
 }
 
 
 const updateById = async (req,res)=>{
 
-    const data = await courseSchema.findByIdAndUpdate({_id: req.params.id},req.body,{new:true,runValidators:true})
-    res.send(data)
+    // Nested Destructuring
+    const {body:{company,position},params:{jobId},user:{id}} = req
+    if(company=='' || position==''){
+        throw new Error("Company and position field should not be empty")
+    }
+    const job = await jobSchema.findByIdAndUpdate({_id: jobId},req.body,{new:true,runValidators:true})
+    if(!job){
+        throw new Error("Job ID Not matching")
+    }
+    res.send(job)
+
 }
 
 module.exports = {

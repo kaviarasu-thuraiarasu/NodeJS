@@ -19,11 +19,12 @@ const register =  async (req,res)=>{
         
         const user = await UserSchema.create(req.body)
         // const token = jwt.sign({ name }, process.env.JWT_SECRET, { expiresIn: '1d' })
-        // console.log(user)
+        
         // 'user' variable is an document reference
-        const token = user.createToken()
-        //console.log(token)
-        res.status(StatusCodes.CREATED).send({user,token})
+        //const token = user.createToken()
+      
+        //res.status(StatusCodes.CREATED).send({user,token})
+        res.status(StatusCodes.CREATED).send({user})
 
     // }catch(e)
     // {
@@ -42,7 +43,7 @@ const login = async (req,res)=>{
 
     }
     const pwdMatched = await user.comparePassword(password)
-    console.log(pwdMatched)
+   
     if(!pwdMatched){
         throw new Error("UnAuthenticated Access")
     }

@@ -14,8 +14,13 @@ const jobSchema = new mongoose.Schema({
     },
     status:{
         type:String,
-        enum:['interview','declined','pending'],
-        default:'pending'
+        enum:{
+            values: ['interview','declined','pending'],
+            message: 'It is not supported'
+          },
+        default:'pending',
+       // required: [true, 'A tour must have a difficulty'],
+        
     },
     createdBy:{
         type:mongoose.Types.ObjectId,
